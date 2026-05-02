@@ -10,77 +10,42 @@ async function redirectToGame() {
     const placeId = await getPlaceId();
 
     if (!placeId) {
-        alert('Please set a Place ID in the extension settings.');
+        alert("No Place ID set");
         return;
     }
 
     window.location.href = `roblox://placeId=${placeId}`;
 }
 
-function isLimitedItem() {
-    const allElements = document.querySelectorAll('*');
-
-    for (const element of allElements) {
-        const text = element.textContent?.trim()?.toLowerCase();
-
-        if (text && text.includes('holding period')) {
-            return true;
-        }
-    }
-
-    return false;
+function findButton() {
+    return document.querySelector(
+        'button.shopping-cart-buy-button.btn-growth-lg.PurchaseButton'
+    );
 }
 
-function updateButton() {
-    if (isLimitedItem()) return;
+function patchButton() {
+    const btn = findButton();
+    if (!btn) return;
 
-    const buttons = document.querySelectorAll('button');
+    if (btn.dataset.patched) return;
 
-    buttons.forEach(button => {
-        const text = button.innerText?.trim()?.toLowerCase();
+    btn.dataset.patched = "true";
+    btn.innerText = "PLAY GAME";
 
-        if (
-            text === 'buy' ||
-            text === 'get' ||
-            text.includes('buy now')
-        ) {
-            if (button.dataset.redirectApplied) return;
-
-            button.dataset.redirectApplied = 'true';
-
-            button.innerText = 'PLAY GAME';
-
-            const cloned = button.cloneNode(true);
-            button.parentNode.replaceChild(cloned, button);
-
-            cloned.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                redirectToGame();
-            });
-        }
+    btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        redirectToGame();
     });
 }
 
-function bootScan(retries = 10) {
-    updateButton();
-
-    if (retries <= 0) return;
-
-    setTimeout(() => {
-        bootScan(retries - 1);
-    }, 300);
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    bootScan();
-});
+patchButton();
 
 const observer = new MutationObserver(() => {
-    updateButton();
+    patchButton();
 });
 
-observer.observe(document.body, {
+observer.observe(document.documentElement, {
     childList: true,
     subtree: true
 });
