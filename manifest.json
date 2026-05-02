@@ -3,24 +3,27 @@
   "name": "Roblox Buy Button Redirect",
   "version": "1.0",
   "description": "Replaces the Roblox buy button with a game join button.",
+
   "permissions": [
     "storage"
   ],
+
+  "host_permissions": [
+    "https://www.roblox.com/*"
+  ],
+
   "action": {
     "default_popup": "popup.html"
   },
+
   "content_scripts": [
     {
       "matches": [
-        "https://www.roblox.com/catalog/*",
-        "https://www.roblox.com/bundles/*"
+        "https://www.roblox.com/*"
       ],
       "js": ["content.js"],
       "css": ["styles.css"],
-      "run_at": "document_idle"
+      "run_at": "document_start"
     }
-  ],
-  "host_permissions": [
-    "https://www.roblox.com/*"
   ]
 }
