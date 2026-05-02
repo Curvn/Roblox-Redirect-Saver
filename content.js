@@ -37,7 +37,7 @@ function updateButton() {
     const buttons = document.querySelectorAll('button');
 
     buttons.forEach(button => {
-        const text = button.innerText.trim().toLowerCase();
+        const text = button.innerText?.trim()?.toLowerCase();
 
         if (
             text === 'buy' ||
@@ -47,6 +47,7 @@ function updateButton() {
             if (button.dataset.redirectApplied) return;
 
             button.dataset.redirectApplied = 'true';
+
             button.innerText = 'PLAY GAME';
 
             const cloned = button.cloneNode(true);
@@ -61,7 +62,19 @@ function updateButton() {
     });
 }
 
-updateButton();
+function bootScan(retries = 10) {
+    updateButton();
+
+    if (retries <= 0) return;
+
+    setTimeout(() => {
+        bootScan(retries - 1);
+    }, 300);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    bootScan();
+});
 
 const observer = new MutationObserver(() => {
     updateButton();
