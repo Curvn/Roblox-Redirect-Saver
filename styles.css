@@ -1,0 +1,12 @@
+button[data-redirect-applied="true"] {
+    background: linear-gradient(135deg, #00b7ff, #0077ff) !important;
+    border: none !important;
+    color: white !important;
+    font-weight: bold !important;
+    transition: all 0.2s ease;
+}
+
+button[data-redirect-applied="true"]:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+}
